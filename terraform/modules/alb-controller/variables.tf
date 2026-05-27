@@ -34,3 +34,9 @@ variable "service_account_name" {
   type    = string
   default = "aws-load-balancer-controller"
 }
+
+variable "skip_crds" {
+  description = "Skip CRDs installation by Helm chart (if managed separately, e.g., via modules/lbc-crds)"
+  type        = bool
+  default     = false
+}

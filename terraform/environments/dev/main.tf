@@ -42,6 +42,15 @@ locals {
   oidc_provider_url = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
 }
 
+# ★ 신설: chart upgrade 함정 회피 위해 LBC 자체 CRD를 명시 관리
+module "lbc_crds" {
+  source = "../../modules/lbc-crds"
+
+  chart_version = "3.3.0" # alb_controller와 일치시켜야 함
+
+  depends_on = [module.eks]
+}
+
 # terraform destroy가 올바른 순서로 동작하게 하기 위한 수정 (2)
 module "alb_controller" {
   source = "../../modules/alb-controller"
@@ -53,9 +62,27 @@ module "alb_controller" {
   aws_region        = var.aws_region
 
   chart_version = "3.3.0"
+  skip_crds     = true # ★ 추가: lbc_crds 모듈이 유일한 source of truth
 
   # ★ 추가: admin 권한이 살아있는 동안에만 Helm operation 가능
   depends_on = [module.eks]
+}
+
+module "gateway_api_crd" {
+  source = "../../modules/gateway-api-crd"
+
+  chart_version       = "3.3.0" # alb_controller / lbc_crds와 일치
+  gateway_api_version = "1.5.0" # LBC v3.3.0이 빌드된 spec 버전
+
+  depends_on = [module.eks]
+}
+
+module "gateway_class" {
+  source = "../../modules/gateway-class"
+
+  # 기본값 사용 (name=alb, controller_name=gateway.k8s.aws/alb)
+
+  depends_on = [module.gateway_api_crd] # 표준 Gateway API CRD가 깔린 후
 }
 
 # terraform destroy가 올바른 순서로 동작하게 하기 위한 수정 (3)

@@ -18,6 +18,7 @@ resource "helm_release" "this" {
   chart      = "aws-load-balancer-controller"
   version    = var.chart_version
   namespace  = var.namespace
+  skip_crds  = var.skip_crds # ★ 추가
 
   set = [ # ← 리스트로 변경
     {

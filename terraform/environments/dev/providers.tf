@@ -29,3 +29,11 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority)
   token                  = data.aws_eks_cluster_auth.this.token
 }
+
+# ★ 추가: kubectl provider — 기존 kubernetes provider와 동일한 인증 방식
+provider "kubectl" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority)
+  token                  = data.aws_eks_cluster_auth.this.token
+  load_config_file       = false
+}
