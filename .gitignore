@@ -1,47 +1,29 @@
-# Terraform 상태 파일 — 로컬에서 실수로 생기면 절대 커밋 금지
-# 실제 상태는 S3 백엔드에 저장됨
+# Terraform
+**/.terraform/
 *.tfstate
 *.tfstate.*
 *.tfstate.backup
-
-# Terraform 작업 디렉토리 (terraform init 시 생성)
-.terraform/
-.terraform.lock.hcl    # 의견 갈림: 팀 환경 고정용으로 커밋하는 팀도 있음
-                       # → 팀원 Terraform 버전 맞추려면 이 줄 삭제하고 커밋 추천
-
-# 플랜 파일 — 실행 전 검토용 바이너리, 민감 정보 포함 가능
-*.tfplan
-*.plan
-
-# 변수 파일 — 비밀값(DB 패스워드, JWT 시크릿 등) 들어갈 수 있음
-*.tfvars
-*.tfvars.json
-# 단, 민감값 없는 공용 변수 파일은 커밋 OK
-# 예: terraform.tfvars는 .gitignore, variables.tfvars.example은 커밋
-
-# 크래시 로그
 crash.log
 crash.*.log
 
-# 프로바이더 override (로컬 개발용)
+# tfvars 정책
+# - terraform.tfvars: 커밋 (환경 설정은 코드의 일부)
+# - *.auto.tfvars, secret.tfvars: 절대 커밋 금지
+*.auto.tfvars
+*.auto.tfvars.json
+secret.tfvars
+secret.tfvars.json
+
+# Override files
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
-# CLI 설정
-.terraformrc
-terraform.rc
+# Plan output
+*.tfplan
 
-# macOS
+# OS / IDE
 .DS_Store
-
-# IDE
 .idea/
 .vscode/
-*.swp
-*.swo
-
-# 환경변수 파일 (로컬 편의용)
-.env
-.env.*
