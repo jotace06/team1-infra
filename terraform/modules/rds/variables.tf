@@ -22,7 +22,7 @@ variable "allowed_security_group_id" {
 
 variable "engine_version" {
   type    = string
-  default = "8.0.40"
+  default = "8.4.8"
 }
 
 variable "instance_class" {

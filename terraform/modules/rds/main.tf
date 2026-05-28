@@ -39,7 +39,7 @@ resource "aws_vpc_security_group_ingress_rule" "mysql_from_eks" {
 # Parameter Group
 resource "aws_db_parameter_group" "this" {
   name   = "${local.name_prefix}-mysql8"
-  family = "mysql8.0"
+  family = "mysql8.4"
 
   parameter {
     name  = "character_set_server"
